@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Learn practical CSS tips for typography and spacing.">
+    <title>CSS Typography and Spacing Essentials</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script defer src="../assets/js/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand" href="../index.html">ModernBlog</a>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="content" class="container">
+      <header class="post-header">
+        <h1>CSS Typography and Spacing Essentials</h1>
+        <div class="meta">
+          <time datetime="2025-08-12">Aug 12, 2025</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span><span class="js-reading-time">6</span> min read</span>
+        </div>
+      </header>
+
+      <article id="post" class="prose">
+        <p>Great typography is invisible. It supports your content by improving readability and hierarchy without drawing attention to itself. Paired with thoughtful spacing, your layout feels calm and intentional.</p>
+
+        <h2>Use a sensible font stack</h2>
+        <p>System font stacks are fast and familiar. This template uses a stack starting with <code>ui-sans-serif</code> and <code>system-ui</code> so text looks native on every device.</p>
+
+        <h2>Set readable sizes and line-heights</h2>
+        <p>Use <code>clamp()</code> for fluid type that scales across devices. A base size around 16–18px with a line-height near 1.6 is a reliable starting point.</p>
+
+        <h3>Mind the rhythm</h3>
+        <p>Apply a spacing scale for consistent vertical rhythm. In this template, spacing variables like <code>--space-4</code> and <code>--space-6</code> help keep things even.</p>
+
+        <h2>Contrast and color</h2>
+        <p>Ensure sufficient contrast between text and background. Consider <em>prefers-color-scheme</em> to support dark mode gracefully.</p>
+
+        <h2>White space is your friend</h2>
+        <p>Do not fear empty space. Generous margins and padding let content breathe and guide the reader’s eye.</p>
+
+        <hr>
+
+        <p>Keep it simple. Simple is maintainable, fast, and delightful.</p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year"></span> ModernBlog. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+

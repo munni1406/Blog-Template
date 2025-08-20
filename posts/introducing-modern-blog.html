@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Introducing a clean, modern, responsive blog template.">
+    <title>Introducing Modern Blog</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script defer src="../assets/js/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand" href="../index.html">ModernBlog</a>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="content" class="container">
+      <header class="post-header">
+        <h1>Introducing Modern Blog</h1>
+        <div class="meta">
+          <time datetime="2025-08-15">Aug 15, 2025</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span><span class="js-reading-time">5</span> min read</span>
+        </div>
+      </header>
+
+      <article id="post" class="prose">
+        <p>Welcome to <strong>Modern Blog</strong> — a minimal, responsive starter built with just HTML, CSS, and a sprinkle of JavaScript. It focuses on great typography, generous spacing, and accessible interactions so your words shine on any device.</p>
+
+        <h2>Features</h2>
+        <ul>
+          <li>Responsive layout with a flexible grid</li>
+          <li>Clean, readable typography with sensible defaults</li>
+          <li>Mobile navigation with good accessibility</li>
+          <li>Light and dark mode via the user's system preference</li>
+        </ul>
+
+        <h2>Getting around</h2>
+        <p>The homepage lists recent posts as cards. Tap or click any card to read the full article. On small screens, use the menu button to open the navigation.</p>
+
+        <h3>Code block example</h3>
+        <pre><code>&lt;article class="prose"&gt;
+  &lt;h1&gt;Your Title&lt;/h1&gt;
+  &lt;p&gt;Write your story here.&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+
+        <blockquote>
+          Good design is as little design as possible — Dieter Rams
+        </blockquote>
+
+        <p>Use this as a base and write your own posts. You can duplicate this file in the <code>posts</code> folder to create more articles and link them from the homepage.</p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year"></span> ModernBlog. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
