@@ -6,8 +6,8 @@
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="A clean, modern, responsive blog template built with HTML, CSS, and JavaScript.">
     <title>Modern Blog</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <script defer src="assets/js/main.js"></script>
+    <link rel="stylesheet" href="posts/assets/css/style.css">
+    <script defer src="posts/assets/js/main.js"></script>
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
@@ -24,6 +24,7 @@
           <li><a href="index.html" aria-current="page">Home</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="admin.html">Admin</a></li>
         </ul>
       </nav>
 
@@ -95,7 +96,7 @@
         <article class="post-card">
           <a class="post-link" href="posts/javascript-dom-events-and-fetch.html">
             <div class="post-thumb" aria-hidden="true">
-              <img src="js.png">
+              <img src="js.png" alt="JavaScript logo and sample code">
             </div>
             <h2 class="post-title">JavaScript Basics: DOM, Events, and Fetch</h2>
             <p class="post-excerpt">Learn how to manipulate the DOM, handle events, and fetch data with modern JavaScript.</p>
@@ -114,6 +115,26 @@
             </div>
           </a>
         </article>
+
+        <!-- Dynamic DB post example (links to view.html?slug=...) -->
+        <!-- <article class="post-card">
+          <a class="post-link" href="posts/view.html?slug=my-awesome-post">
+            <div class="post-thumb" aria-hidden="true">
+              <img src="html.webp" alt="Post image">
+            </div>
+            <h2 class="post-title">My awesome post</h2>
+            <p class="post-excerpt">This one is loaded from the database.</p>
+            <div class="post-extra">
+              <span class="post-author">By Admin</span>
+              <ul class="post-tags"></ul>
+            </div>
+            <div class="post-meta">
+              <time datetime="2025-08-15">Aug 15, 2025</time>
+              <span class="dot" aria-hidden="true">·</span>
+              <span>5 min read</span>
+            </div>
+          </a>
+        </article> -->
       </section>
     </main>
 

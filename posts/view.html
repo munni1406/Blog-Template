@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="View post">
+    <title>View Post · Modern Blog</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script defer src="assets/js/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand" href="../index.html">ModernBlog</a>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+          <li><a href="../admin.html">Admin</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="content" class="container">
+      <header class="post-header">
+        <h1 id="title">Loading…</h1>
+        <div class="meta">
+          <time id="date" datetime=""></time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span><span id="read" class="js-reading-time">—</span> min read</span>
+        </div>
+      </header>
+
+      <article id="post" class="prose"></article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year"></span> ModernBlog. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      (async function () {
+        function qs(name) {
+          const p = new URLSearchParams(location.search);
+          return p.get(name);
+        }
+        function fmtDateHuman(iso) {
+          try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }); } catch { return iso; }
+        }
+        const slug = qs('slug');
+        if (!slug) { document.getElementById('title').textContent = 'Missing slug'; return; }
+        try {
+          const res = await fetch(`/api/posts/${encodeURIComponent(slug)}`);
+          if (!res.ok) throw new Error('Not found');
+          const post = await res.json();
+          document.title = post.title + ' · Modern Blog';
+          document.getElementById('title').textContent = post.title;
+          const timeEl = document.getElementById('date');
+          timeEl.textContent = fmtDateHuman(post.date || '');
+          if (post.date) timeEl.setAttribute('datetime', post.date);
+          const article = document.getElementById('post');
+          article.innerHTML = post.content;
+          // Compute reading time after content injection
+          try {
+            const words = article.innerText.trim().split(/\s+/).length;
+            const minutes = Math.max(1, Math.round(words / 200));
+            const rtHolder = document.querySelector('.js-reading-time');
+            if (rtHolder) { rtHolder.textContent = String(minutes); }
+          } catch {}
+        } catch (e) {
+          document.getElementById('title').textContent = 'Post not found';
+        }
+      })();
+    </script>
+  </body>
+  
+</html>
+
+

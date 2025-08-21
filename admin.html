@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Admin · Create and export blog posts as standalone HTML.">
+    <title>Admin · Modern Blog</title>
+    <link rel="stylesheet" href="posts/assets/css/style.css">
+    <script defer src="posts/assets/js/main.js"></script>
+    <style>
+      .admin-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-4); }
+      @media (max-width: 900px) { .admin-grid { grid-template-columns: repeat(6, 1fr); } }
+      @media (max-width: 600px) { .admin-grid { grid-template-columns: repeat(1, 1fr); } }
+      .admin-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+      .actions { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+      .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand" href="index.html">ModernBlog</a>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="admin.html" aria-current="page">Admin</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="content" class="container">
+      <header class="post-header">
+        <h1>Admin</h1>
+        <div class="meta"><span>Create and manage posts.</span></div>
+      </header>
+
+      <article class="prose" style="max-width: 900px;">
+        <form id="postForm">
+          <h2>Post details</h2>
+          <div class="admin-grid">
+            <label style="grid-column: span 8;">
+              <div>Title</div>
+              <input id="title" type="text" required placeholder="My awesome post" class="admin-control">
+            </label>
+            <label style="grid-column: span 4;">
+              <div>Slug (auto from title, edit if needed)</div>
+              <input id="slug" type="text" required placeholder="my-awesome-post" class="admin-control">
+            </label>
+
+            <label style="grid-column: span 6;">
+              <div>Author</div>
+              <input id="author" type="text" placeholder="Your name" class="admin-control">
+            </label>
+            <label style="grid-column: span 3;">
+              <div>Date</div>
+              <input id="date" type="date" class="admin-control">
+            </label>
+            <label style="grid-column: span 3;">
+              <div>Hero image URL (for card)</div>
+              <input id="hero" type="text" placeholder="/path/to/image.jpg" class="admin-control">
+            </label>
+
+            <label style="grid-column: span 12;">
+              <div>Excerpt (for homepage card)</div>
+              <textarea id="excerpt" rows="2" placeholder="One or two lines that summarize the post." class="admin-control"></textarea>
+            </label>
+
+            <label style="grid-column: span 12;">
+              <div>Tags (comma‑separated)</div>
+              <input id="tags" type="text" placeholder="HTML, CSS, JavaScript" class="admin-control">
+            </label>
+
+            <label style="grid-column: span 12;">
+              <div>Article content (HTML)</div>
+              <textarea id="content" rows="12" placeholder="&lt;p&gt;Write your story here...&lt;/p&gt;" class="admin-control"></textarea>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="saveDbBtn" class="btn">Save to database</button>
+            <button type="button" id="resetBtn" class="btn">Reset</button>
+          </div>
+        </form>
+
+        <h2 style="margin-top: var(--space-6);">Saved posts (database)</h2>
+        <div id="savedPosts" style="border:1px solid var(--border); border-radius: 12px; padding: var(--space-4); background: var(--surface);"></div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year"></span> ModernBlog. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        const titleEl = document.getElementById('title');
+        const slugEl = document.getElementById('slug');
+        const authorEl = document.getElementById('author');
+        const dateEl = document.getElementById('date');
+        const heroEl = document.getElementById('hero');
+        const excerptEl = document.getElementById('excerpt');
+        const tagsEl = document.getElementById('tags');
+        const contentEl = document.getElementById('content');
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        dateEl.value = `${yyyy}-${mm}-${dd}`;
+
+        function slugify(text) {
+          return (text || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+        }
+
+        function escapeHtml(str) {
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+        }
+
+        function autoSlug() {
+          const s = slugify(titleEl.value);
+          if (!slugEl.matches(':focus')) slugEl.value = s;
+        }
+
+        titleEl.addEventListener('input', autoSlug);
+
+        document.getElementById('resetBtn').addEventListener('click', function () {
+          document.getElementById('postForm').reset();
+          dateEl.value = `${yyyy}-${mm}-${dd}`;
+          slugEl.value = '';
+        });
+
+        async function saveToDb() {
+          const title = titleEl.value.trim();
+          const slug = (slugEl.value.trim()) || slugify(title);
+          const payload = {
+            slug,
+            title: title || 'Untitled',
+            author: authorEl.value.trim(),
+            excerpt: excerptEl.value.trim(),
+            tags: tagsEl.value.trim(),
+            date: dateEl.value,
+            hero: heroEl.value.trim(),
+            content: contentEl.value || '<p>Write your story here.</p>'
+          };
+          try {
+            const res = await fetch('/api/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            if (!res.ok) {
+              const msg = await res.json().catch(() => ({}));
+              throw new Error(msg.error || res.statusText);
+            }
+            const data = await res.json();
+            alert('Saved! View at posts/view.html?slug=' + data.slug);
+            loadSavedPosts();
+          } catch (e) {
+            alert('Save failed: ' + e.message);
+          }
+        }
+
+        document.getElementById('saveDbBtn').addEventListener('click', saveToDb);
+
+        async function loadSavedPosts() {
+          const holder = document.getElementById('savedPosts');
+          holder.textContent = 'Loading…';
+          try {
+            const res = await fetch('/api/posts');
+            if (!res.ok) throw new Error('Failed to load');
+            const rows = await res.json();
+            if (!rows.length) { holder.textContent = 'No posts saved yet.'; return; }
+            const list = document.createElement('div');
+            list.style.display = 'grid';
+            list.style.gap = '12px';
+            rows.forEach(p => {
+              const item = document.createElement('div');
+              item.style.display = 'flex';
+              item.style.justifyContent = 'space-between';
+              item.style.alignItems = 'center';
+              item.style.padding = '10px';
+              item.style.border = '1px solid var(--border)';
+              item.style.borderRadius = '10px';
+              const left = document.createElement('div');
+              left.innerHTML = `<strong>${escapeHtml(p.title)}</strong><div style="color:var(--muted); font-size:0.95em;">${escapeHtml(p.slug)}${p.date ? ' · ' + escapeHtml(p.date) : ''}</div>`;
+              const right = document.createElement('div');
+              right.innerHTML = `<a href="posts/view.html?slug=${encodeURIComponent(p.slug)}" style="color: var(--brand);">Open</a>`;
+              item.appendChild(left);
+              item.appendChild(right);
+              list.appendChild(item);
+            });
+            holder.innerHTML = '';
+            holder.appendChild(list);
+          } catch (e) {
+            holder.textContent = 'Failed to load posts.';
+          }
+        }
+
+        // Load existing posts on page open
+        loadSavedPosts();
+
+        // Init
+        autoSlug();
+      })();
+    </script>
+  </body>
+</html>
