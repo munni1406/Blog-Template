@@ -137,6 +137,14 @@
             .replace(/'/g, '&#039;');
         }
 
+        function getLocalPosts() {
+          try { return JSON.parse(localStorage.getItem('posts') || '[]'); } catch { return []; }
+        }
+
+        function setLocalPosts(posts) {
+          try { localStorage.setItem('posts', JSON.stringify(posts)); } catch {}
+        }
+
         function autoSlug() {
           const s = slugify(titleEl.value);
           if (!slugEl.matches(':focus')) slugEl.value = s;
@@ -164,16 +172,15 @@
             content: contentEl.value || '<p>Write your story here.</p>'
           };
           try {
-            const res = await fetch('/api/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            if (!res.ok) {
-              const msg = await res.json().catch(() => ({}));
-              throw new Error(msg.error || res.statusText);
-            }
-            const data = await res.json();
-            alert('Saved! View at posts/view.html?slug=' + data.slug);
-            loadSavedPosts();
+            const existing = getLocalPosts();
+            const duplicate = existing.some(p => String(p.slug).trim().toLowerCase() === slug.trim().toLowerCase());
+            if (duplicate) throw new Error('SLUG_EXISTS');
+            existing.push(payload);
+            setLocalPosts(existing);
+            window.location.href = `posts/view.html?slug=${encodeURIComponent(slug)}`;
           } catch (e) {
-            alert('Save failed: ' + e.message);
+            const msg = e && e.message === 'SLUG_EXISTS' ? 'Slug already exists. Choose a different slug.' : (e && e.message) || 'Unknown error';
+            alert('Save failed: ' + msg);
           }
         }
 
@@ -183,9 +190,7 @@
           const holder = document.getElementById('savedPosts');
           holder.textContent = 'Loading…';
           try {
-            const res = await fetch('/api/posts');
-            if (!res.ok) throw new Error('Failed to load');
-            const rows = await res.json();
+            const rows = getLocalPosts();
             if (!rows.length) { holder.textContent = 'No posts saved yet.'; return; }
             const list = document.createElement('div');
             list.style.display = 'grid';

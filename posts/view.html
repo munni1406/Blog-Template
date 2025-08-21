@@ -57,12 +57,15 @@
         function fmtDateHuman(iso) {
           try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }); } catch { return iso; }
         }
-        const slug = qs('slug');
-        if (!slug) { document.getElementById('title').textContent = 'Missing slug'; return; }
-        try {
-          const res = await fetch(`/api/posts/${encodeURIComponent(slug)}`);
-          if (!res.ok) throw new Error('Not found');
-          const post = await res.json();
+        function getLocalPost(slug) {
+          try {
+            const arr = JSON.parse(localStorage.getItem('posts') || '[]');
+            return arr.find(p => String(p.slug) === String(slug)) || null;
+          } catch {
+            return null;
+          }
+        }
+        function renderPost(post) {
           document.title = post.title + ' · Modern Blog';
           document.getElementById('title').textContent = post.title;
           const timeEl = document.getElementById('date');
@@ -70,13 +73,22 @@
           if (post.date) timeEl.setAttribute('datetime', post.date);
           const article = document.getElementById('post');
           article.innerHTML = post.content;
-          // Compute reading time after content injection
           try {
             const words = article.innerText.trim().split(/\s+/).length;
             const minutes = Math.max(1, Math.round(words / 200));
             const rtHolder = document.querySelector('.js-reading-time');
             if (rtHolder) { rtHolder.textContent = String(minutes); }
           } catch {}
+        }
+        const slug = qs('slug');
+        if (!slug) { document.getElementById('title').textContent = 'Missing slug'; return; }
+        const local = getLocalPost(slug);
+        if (local) { renderPost(local); return; }
+        try {
+          const res = await fetch(`/api/posts/${encodeURIComponent(slug)}`);
+          if (!res.ok) throw new Error('Not found');
+          const post = await res.json();
+          renderPost(post);
         } catch (e) {
           document.getElementById('title').textContent = 'Post not found';
         }
