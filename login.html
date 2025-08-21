@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Login to ModernBlog">
+    <title>Login · Modern Blog</title>
+    <link rel="stylesheet" href="posts/assets/css/style.css">
+    <script defer src="posts/assets/js/main.js"></script>
+    <style>
+      .login-card { max-width: 420px; margin: 10vh auto; padding: var(--space-5); border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+      .login-title { margin: 0 0 var(--space-3) 0; font-size: 1.5rem; }
+      .control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+      .stack { display: grid; gap: 12px; }
+      .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--brand-ghost, var(--surface)); cursor: pointer; }
+      .error { color: var(--danger, #c62828); min-height: 1.25rem; }
+      .hint { color: var(--muted); font-size: 0.9rem; }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand" href="/login.html">ModernBlog</a>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="/login.html" aria-current="page">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="content" class="container">
+      <section class="login-card">
+        <h1 class="login-title">Sign in</h1>
+        <p class="hint">Default: username <code>admin</code>, password <code>admin123</code>. You can change these via environment variables.</p>
+        <div id="loginError" class="error" role="alert" aria-live="polite"></div>
+        <form method="post" action="/auth/login" class="stack" autocomplete="on">
+          <label>
+            <div>Username</div>
+            <input class="control" name="username" type="text" required autofocus placeholder="Enter username">
+          </label>
+          <label>
+            <div>Password</div>
+            <input class="control" name="password" type="password" required placeholder="Enter password">
+          </label>
+          <button class="btn" type="submit">Login</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year"></span> ModernBlog. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      (function(){
+        var params = new URLSearchParams(location.search);
+        if (params.get('error')) {
+          var el = document.getElementById('loginError');
+          if (el) el.textContent = 'Invalid username or password.';
+        }
+      })();
+    </script>
+  </body>
+</html>
+
+

@@ -3,6 +3,7 @@
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,6 +32,50 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model('Post', postSchema);
 
 app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: false }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'dev_secret_change_me',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, sameSite: 'lax' }
+}));
+
+// Auth routes
+app.post('/auth/login', (req, res) => {
+  const username = (req.body && req.body.username) || '';
+  const password = (req.body && req.body.password) || '';
+  const expectedUser = process.env.ADMIN_USER || 'admin';
+  const expectedPass = process.env.ADMIN_PASS || 'admin123';
+  if (username === expectedUser && password === expectedPass) {
+    req.session.user = { username };
+    return res.redirect('/');
+  }
+  return res.redirect('/login.html?error=1');
+});
+
+app.post('/auth/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/login.html');
+  });
+});
+app.get('/auth/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/login.html');
+  });
+});
+
+// Gate: require login for HTML pages (not assets, not API)
+app.use((req, res, next) => {
+  const allowedPaths = new Set(['/login.html', '/auth/login', '/api/health']);
+  const isAsset = /(\.(css|js|png|jpg|jpeg|webp|svg|ico|gif|map|woff2?|ttf|eot)$)/.test(req.path) || req.path.startsWith('/posts/assets/');
+  const isHtmlLike = req.path === '/' || req.path.endsWith('.html');
+  if (!req.session.user && isHtmlLike && !allowedPaths.has(req.path)) {
+    return res.redirect('/login.html');
+  }
+  next();
+});
+
+// Static files
 app.use(express.static(ROOT_DIR));
 
 function validatePost(body) {
