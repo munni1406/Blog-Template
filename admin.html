@@ -8,6 +8,7 @@
     <title>Admin · Modern Blog</title>
     <link rel="stylesheet" href="posts/assets/css/style.css">
     <script defer src="posts/assets/js/main.js"></script>
+    <script defer src="posts/assets/js/auth.js"></script>
     <style>
       .admin-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-4); }
       @media (max-width: 900px) { .admin-grid { grid-template-columns: repeat(6, 1fr); } }
@@ -22,17 +23,18 @@
 
     <header class="site-header">
       <nav class="nav container" aria-label="Primary">
-        <a class="brand" href="index.html">ModernBlog</a>
+        <a class="brand" href="home.html">ModernBlog</a>
         <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
         <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
+          <li><a href="home.html">Home</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="admin.html" aria-current="page">Admin</a></li>
+          <li><a href="logout.html" id="logoutLink">Logout</a></li>
         </ul>
       </nav>
     </header>
@@ -103,6 +105,8 @@
     </footer>
 
     <script>
+      // Require auth for admin
+      (function(){ if (window.Auth && !window.Auth.requireAuth('index.html')) return; })();
       (function () {
         const titleEl = document.getElementById('title');
         const slugEl = document.getElementById('slug');
@@ -177,7 +181,14 @@
             if (duplicate) throw new Error('SLUG_EXISTS');
             existing.push(payload);
             setLocalPosts(existing);
-            window.location.href = `posts/view.html?slug=${encodeURIComponent(slug)}`;
+            // Open specific HTML post if content relates to HTML; otherwise open the created post
+            var textForMatch = `${title} ${tagsEl.value || ''}`.toLowerCase();
+            if (textForMatch.includes('html')) {
+              window.open('posts/introducing-modern-blog.html', '_blank');
+            } else {
+              window.open(`posts/view.html?slug=${encodeURIComponent(slug)}`, '_blank');
+            }
+            alert('Post saved. Opening the blog in a new tab.');
           } catch (e) {
             const msg = e && e.message === 'SLUG_EXISTS' ? 'Slug already exists. Choose a different slug.' : (e && e.message) || 'Unknown error';
             alert('Save failed: ' + msg);
@@ -185,12 +196,16 @@
         }
 
         document.getElementById('saveDbBtn').addEventListener('click', saveToDb);
+        const logoutLink = document.getElementById('logoutLink');
+        // No JS needed here; link goes to logout.html
 
         async function loadSavedPosts() {
           const holder = document.getElementById('savedPosts');
           holder.textContent = 'Loading…';
           try {
-            const rows = getLocalPosts();
+            const res = await fetch('/api/posts');
+            if (!res.ok) throw new Error('LOAD_FAILED');
+            const rows = await res.json();
             if (!rows.length) { holder.textContent = 'No posts saved yet.'; return; }
             const list = document.createElement('div');
             list.style.display = 'grid';

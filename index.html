@@ -4,140 +4,48 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="A clean, modern, responsive blog template built with HTML, CSS, and JavaScript.">
-    <title>Modern Blog</title>
+    <meta name="description" content="Login">
+    <title>Login · Modern Blog</title>
     <link rel="stylesheet" href="posts/assets/css/style.css">
     <script defer src="posts/assets/js/main.js"></script>
+    <script defer src="posts/assets/js/auth.js"></script>
+    <style>
+      .login-card { max-width: 420px; margin: 10vh auto; border:1px solid var(--border); border-radius: 12px; padding: var(--space-5); background: var(--surface); }
+      .login-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+      .login-actions { display:flex; gap:12px; margin-top:12px; }
+      .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--brand-weak, var(--surface)); cursor: pointer; }
+      .error { color: var(--danger, #c00); margin-top: 10px; min-height: 1.2em; }
+    </style>
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
 
     <header class="site-header">
       <nav class="nav container" aria-label="Primary">
-        <a class="brand" href="index.html">ModernBlog</a>
-        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </button>
-        <ul class="nav-links">
-          <li><a href="index.html" aria-current="page">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="admin.html">Admin</a></li>
-        </ul>
+        <a class="brand" href="home.html">ModernBlog</a>
       </nav>
-
-      <section class="hero container">
-        <h1>Insights, tutorials, and stories</h1>
-        <p>Clean, minimal blog starter with great typography and spacing.</p>
-        <div class="hero-photos" role="group" aria-label="Featured photos">
-          <figure>
-            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=60" alt="Desk with laptop and notebook" loading="lazy" width="1200" height="800">
-          </figure>
-          <figure>
-            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=60" alt="Code on screen with developer at work" loading="lazy" width="1200" height="800">
-          </figure>
-          <figure>
-            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=60" alt="Workspace with coffee and keyboard" loading="lazy" width="1200" height="800">
-          </figure>
-        </div>
-      </section>
     </header>
 
     <main id="content" class="container">
-      <section class="posts-grid">
-        <article class="post-card">
-          <a class="post-link" href="posts/introducing-modern-blog.html">
-            <div class="post-thumb" aria-hidden="true">
-              <img src="html.webp" alt="HTML, CSS, and JavaScript collage">
-            </div>
-            <h2 class="post-title">Introducing Modern Blog</h2>
-            <p class="post-excerpt">A fast, accessible blog template you can customize and deploy anywhere.</p>
-            <div class="post-extra">
-              <span class="post-author">By Alex Carter</span>
-              <ul class="post-tags">
-                <li class="tag">HTML</li>
-                <li class="tag">CSS</li>
-                <li class="tag">JavaScript</li>
-              </ul>
-            </div>
-            <div class="post-meta">
-              <time datetime="2025-08-15">Aug 15, 2025</time>
-              <span class="dot" aria-hidden="true">·</span>
-              <span>4 min read</span>
-            </div>
-          </a>
-        </article>
-
-        <article class="post-card">
-          <a class="post-link" href="posts/css-typography-and-spacing.html">
-            <div class="post-thumb alt" aria-hidden="true">
-              <img src="css.png" alt="CSS logo and stylesheet visuals">
-            </div>
-            <h2 class="post-title">CSS Typography and Spacing Essentials</h2>
-            <p class="post-excerpt">Practical tips to make your text readable and your layout breathable.</p>
-            <div class="post-extra">
-              <span class="post-author">By Jamie Nguyen</span>
-              <ul class="post-tags">
-                <li class="tag">CSS</li>
-                <li class="tag">Typography</li>
-                <li class="tag">UX</li>
-              </ul>
-            </div>
-            <div class="post-meta">
-              <time datetime="2025-08-12">Aug 12, 2025</time>
-              <span class="dot" aria-hidden="true">·</span>
-              <span>6 min read</span>
-            </div>
-          </a>
-        </article>
-
-        <article class="post-card">
-          <a class="post-link" href="posts/javascript-dom-events-and-fetch.html">
-            <div class="post-thumb" aria-hidden="true">
-              <img src="js.png" alt="JavaScript logo and sample code">
-            </div>
-            <h2 class="post-title">JavaScript Basics: DOM, Events, and Fetch</h2>
-            <p class="post-excerpt">Learn how to manipulate the DOM, handle events, and fetch data with modern JavaScript.</p>
-            <div class="post-extra">
-              <span class="post-author">By Sam Lee</span>
-              <ul class="post-tags">
-                <li class="tag">JavaScript</li>
-                <li class="tag">DOM</li>
-                <li class="tag">APIs</li>
-              </ul>
-            </div>
-            <div class="post-meta">
-              <time datetime="2025-08-10">Aug 10, 2025</time>
-              <span class="dot" aria-hidden="true">·</span>
-              <span>5 min read</span>
-            </div>
-          </a>
-        </article>
-
-        <!-- Dynamic DB post example (links to view.html?slug=...) -->
-        <!-- <article class="post-card">
-          <a class="post-link" href="posts/view.html?slug=my-awesome-post">
-            <div class="post-thumb" aria-hidden="true">
-              <img src="html.webp" alt="Post image">
-            </div>
-            <h2 class="post-title">My awesome post</h2>
-            <p class="post-excerpt">This one is loaded from the database.</p>
-            <div class="post-extra">
-              <span class="post-author">By Admin</span>
-              <ul class="post-tags"></ul>
-            </div>
-            <div class="post-meta">
-              <time datetime="2025-08-15">Aug 15, 2025</time>
-              <span class="dot" aria-hidden="true">·</span>
-              <span>5 min read</span>
-            </div>
-          </a>
-        </article> -->
-
-
-      </section>
+      <div class="login-card">
+        <h1>Sign in</h1>
+        <p style="color:var(--muted)">Use any username and password to continue.</p>
+        <form id="loginForm">
+          <label>
+            <div>Username</div>
+            <input id="username" type="text" class="login-control" autocomplete="username">
+          </label>
+          <div style="height: 10px"></div>
+          <label>
+            <div>Password</div>
+            <input id="password" type="password" class="login-control" autocomplete="current-password">
+          </label>
+          <div class="login-actions">
+            <button type="submit" class="btn">Login</button>
+          </div>
+          <div id="error" class="error"></div>
+        </form>
+      </div>
     </main>
 
     <footer class="site-footer">
@@ -145,6 +53,30 @@
         <p>© <span id="year"></span> ModernBlog. All rights reserved.</p>
       </div>
     </footer>
+
+    <script>
+      (function () {
+        const form = document.getElementById('loginForm');
+        const userEl = document.getElementById('username');
+        const passEl = document.getElementById('password');
+        const errEl = document.getElementById('error');
+        try {
+          if (window.Auth && window.Auth.isLoggedIn()) {
+            window.location.replace('admin.html');
+            return;
+          }
+        } catch {}
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          errEl.textContent = '';
+          const ok = window.Auth && window.Auth.login(userEl.value, passEl.value);
+          if (ok) {
+            window.location.replace('home.html');
+          } else {
+            errEl.textContent = 'Enter a username and password.';
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
-

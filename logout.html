@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Logout">
+    <title>Logout · Modern Blog</title>
+    <link rel="stylesheet" href="posts/assets/css/style.css">
+    <script defer src="posts/assets/js/main.js"></script>
+    <script defer src="posts/assets/js/auth.js"></script>
+    <style>
+      .card { max-width: 520px; margin: 12vh auto; border:1px solid var(--border); border-radius: 12px; padding: var(--space-5); background: var(--surface); }
+      .actions { display:flex; gap:12px; margin-top:12px; flex-wrap: wrap; }
+      .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; }
+      .btn-danger { background: var(--danger-weak, #fee); color: var(--danger-strong, #900); }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand" href="home.html">ModernBlog</a>
+      </nav>
+    </header>
+
+    <main id="content" class="container">
+      <div class="card">
+        <h1>Sign out</h1>
+        <p style="color:var(--muted)">Choose what you want to do.</p>
+        <div class="actions">
+          <button id="logoutBtn" class="btn">Logout</button>
+          <button id="deleteBtn" class="btn btn-danger">Delete account</button>
+          <a class="btn" href="home.html" style="text-decoration:none;">Cancel</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year"></span> ModernBlog. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      (function(){
+        // If not logged in, just go to login page
+        if (window.Auth && !window.Auth.isLoggedIn()) {
+          window.location.replace('index.html');
+          return;
+        }
+        var logoutBtn = document.getElementById('logoutBtn');
+        var deleteBtn = document.getElementById('deleteBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', function(){ if (window.Auth) window.Auth.logout(); window.location.replace('index.html'); });
+        }
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', function(){
+            if (confirm('Are you sure you want to delete your account? This removes local posts and signs you out.')) {
+              if (window.Auth) window.Auth.deleteAccount();
+              window.location.replace('index.html');
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
+
+

@@ -8,23 +8,25 @@
     <title>View Post · Modern Blog</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/auth.js"></script>
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
 
     <header class="site-header">
       <nav class="nav container" aria-label="Primary">
-        <a class="brand" href="../index.html">ModernBlog</a>
+        <a class="brand" href="../home.html">ModernBlog</a>
         <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
         <ul class="nav-links">
-          <li><a href="../index.html">Home</a></li>
+          <li><a href="../home.html">Home</a></li>
           <li><a href="../about.html">About</a></li>
           <li><a href="../contact.html">Contact</a></li>
           <li><a href="../admin.html">Admin</a></li>
+          <li><a href="../logout.html" id="logoutLink" style="display:none;">Logout</a></li>
         </ul>
       </nav>
     </header>
@@ -49,6 +51,8 @@
     </footer>
 
     <script>
+      // Require auth to view posts
+      (function(){ if (window.Auth && !window.Auth.requireAuth('../index.html')) return; })();
       (async function () {
         function qs(name) {
           const p = new URLSearchParams(location.search);
@@ -91,6 +95,13 @@
           renderPost(post);
         } catch (e) {
           document.getElementById('title').textContent = 'Post not found';
+        }
+      })();
+      (function(){
+        var logout = document.getElementById('logoutLink');
+        if (logout && window.Auth && window.Auth.isLoggedIn()) {
+          logout.style.display = 'inline-block';
+          // Link now navigates to dedicated logout page
         }
       })();
     </script>

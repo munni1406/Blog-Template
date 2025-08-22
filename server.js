@@ -31,6 +31,10 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model('Post', postSchema);
 
 app.use(express.json({ limit: '2mb' }));
+// Redirect root to login first
+app.get('/', (req, res) => {
+  res.redirect('/index.html');
+});
 app.use(express.static(ROOT_DIR));
 
 function validatePost(body) {
