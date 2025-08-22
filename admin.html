@@ -105,8 +105,15 @@
     </footer>
 
     <script>
-      // Require auth for admin
-      (function(){ if (window.Auth && !window.Auth.requireAuth('index.html')) return; })();
+      // Require auth for admin (await async API)
+      (async function(){
+        try {
+          if (window.Auth) {
+            const ok = await window.Auth.requireAuth('index.html');
+            if (!ok) return;
+          }
+        } catch {}
+      })();
       (function () {
         const titleEl = document.getElementById('title');
         const slugEl = document.getElementById('slug');

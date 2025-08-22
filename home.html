@@ -149,15 +149,15 @@
       </div>
     </footer>
     <script>
-      (function(){
+      (async function(){
         var cameFrom = document.referrer || '';
         var isFromLogin = cameFrom.endsWith('/index.html') || cameFrom.includes('/index.html');
-        if (window.Auth && !window.Auth.isLoggedIn() && !isFromLogin) {
+        if (window.Auth && !(await window.Auth.isLoggedIn()) && !isFromLogin) {
           window.location.replace('index.html');
           return;
         }
         var logout = document.getElementById('logoutLink');
-        if (logout && window.Auth && window.Auth.isLoggedIn()) {
+        if (logout && window.Auth && (await window.Auth.isLoggedIn())) {
           logout.style.display = 'inline-block';
           logout.addEventListener('click', function(e){
             e.preventDefault();

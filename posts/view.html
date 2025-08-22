@@ -51,8 +51,8 @@
     </footer>
 
     <script>
-      // Require auth to view posts
-      (function(){ if (window.Auth && !window.Auth.requireAuth('../index.html')) return; })();
+      // Require auth to view posts (await async API)
+      (async function(){ if (window.Auth) { const ok = await window.Auth.requireAuth('../index.html'); if (!ok) return; } })();
       (async function () {
         function qs(name) {
           const p = new URLSearchParams(location.search);
@@ -97,9 +97,9 @@
           document.getElementById('title').textContent = 'Post not found';
         }
       })();
-      (function(){
+      (async function(){
         var logout = document.getElementById('logoutLink');
-        if (logout && window.Auth && window.Auth.isLoggedIn()) {
+        if (logout && window.Auth && (await window.Auth.isLoggedIn())) {
           logout.style.display = 'inline-block';
           logout.addEventListener('click', function(e){
             e.preventDefault();
