@@ -3,7 +3,7 @@
 A clean, responsive blog starter built with HTML, CSS, and a tiny bit of JavaScript. It now includes a minimal Admin app and a Node.js API backed by MongoDB to store and render posts dynamically.
 
 ### Concept
-- **Simple, fast, no build step**: Static pages for the site shell (`index.html`, `about.html`, `contact.html`).
+- **Simple, fast, no build step**: Static pages for the site shell (`home.html`, `about.html`, `contact.html`). Login at `index.html`.
 - **Responsive and accessible**: Mobile-first layout, semantic HTML, skip link, keyboard‑friendly nav, and system light/dark preference.
 - **Content options**:
   - Static posts under `posts/` (plain HTML files).
@@ -18,8 +18,10 @@ A clean, responsive blog starter built with HTML, CSS, and a tiny bit of JavaScr
 ### Project structure
 ```
 Blog-Template/
-  admin.html            # Minimal admin UI to create posts in MongoDB
-  index.html            # Homepage with posts grid
+  admin.html            # Admin UI to create posts (currently stores in localStorage)
+  index.html            # Login page (shown first); redirects to home after login
+  home.html             # Homepage with posts grid
+  logout.html           # Page to logout or delete local account data
   about.html            # About page
   contact.html          # Contact page
   server.js             # Express + Mongoose server and API
@@ -29,6 +31,7 @@ Blog-Template/
     assets/
       css/style.css     # Site styles
       js/main.js        # Nav toggle + reading-time utility
+      js/auth.js        # Minimal client-side auth helper
     ...                 # Optional static post HTML files
 ```
 
@@ -56,15 +59,18 @@ npm start
 If `MONGO_URI` is not set, the server defaults to `mongodb://127.0.0.1:27017/modern_blog`.
 
 3. Open the site:
-- Admin: `http://localhost:3000/admin.html`
-- Dynamic viewer: `http://localhost:3000/posts/view.html?slug=your-slug`
-- Homepage: `http://localhost:3000/`
+- Login: `http://localhost:3000/` (redirects to `index.html`)
+- After login: `home.html`
+- Admin: `admin.html` (requires login)
+- Dynamic viewer: `posts/view.html?slug=your-slug`
 
 ### Using the Admin
-1. Open `admin.html`.
+1. Open `admin.html` (after logging in).
 2. Fill in title, slug (auto-generated), author, date, tags, excerpt, hero image URL, and HTML content.
-3. Click “Save to database”. The post will appear in the saved list with a link.
-4. Share or link to `posts/view.html?slug=your-slug` from the homepage or anywhere else.
+3. Click “Save to database”.
+   - Current behavior: saves to browser localStorage and opens the post in a new tab.
+   - Viewer behavior: `posts/view.html` first tries localStorage; if not found, it falls back to the API (`/api/posts/:slug`).
+4. If the Title or Tags include "html", the static post `posts/introducing-modern-blog.html` opens instead.
 
 To feature a DB-backed post on the homepage, add a card in `index.html` linking to the viewer, for example:
 ```html
@@ -99,10 +105,18 @@ To feature a DB-backed post on the homepage, add a card in `index.html` linking 
 
 ### Customization
 - Edit styles in `posts/assets/css/style.css` to change typography, spacing, and color tokens.
-- Update `index.html` cards to point to static HTML posts or to `posts/view.html?slug=...` for DB-backed posts.
+- Update `home.html` cards to point to static HTML posts or to `posts/view.html?slug=...` for DB-backed posts.
 - Extend the API in `server.js` (e.g., add update/delete endpoints) if needed.
 
 ### Notes on responsiveness and accessibility
 - Grid and form layouts collapse smoothly on tablets and mobile.
 - Navigation is keyboard accessible and supports a mobile toggle; a skip link is provided.
+
+### Recent changes
+- Added login-first flow: `index.html` (login) → `home.html` (homepage). Server root `/` redirects to `index.html`.
+- Introduced `posts/assets/js/auth.js` with minimal client-side auth; protected `admin.html` and `posts/view.html`.
+- Added `logout.html` with options to Logout or Delete account (clears local data).
+- Updated nav links across pages to use `home.html` for Home and point Logout to `logout.html`.
+- Admin save flow now opens the created post in a new tab; if Title/Tags include "html", it opens the static `posts/introducing-modern-blog.html` instead.
+- Homepage (`home.html`) shows Logout when authenticated and hides it otherwise.
 
