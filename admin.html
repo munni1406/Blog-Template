@@ -34,7 +34,7 @@
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="admin.html" aria-current="page">Admin</a></li>
-          <li><a href="logout.html" id="logoutLink">Logout</a></li>
+          <!-- <li><a href="logout.html" id="logoutLink">Logout</a></li> -->
         </ul>
       </nav>
     </header>
@@ -181,14 +181,8 @@
             if (duplicate) throw new Error('SLUG_EXISTS');
             existing.push(payload);
             setLocalPosts(existing);
-            // Open specific HTML post if content relates to HTML; otherwise open the created post
-            var textForMatch = `${title} ${tagsEl.value || ''}`.toLowerCase();
-            if (textForMatch.includes('html')) {
-              window.open('posts/introducing-modern-blog.html', '_blank');
-            } else {
-              window.open(`posts/view.html?slug=${encodeURIComponent(slug)}`, '_blank');
-            }
-            alert('Post saved. Opening the blog in a new tab.');
+            // Navigate to the created post view in the same tab
+            window.location.href = `posts/view.html?slug=${encodeURIComponent(slug)}`;
           } catch (e) {
             const msg = e && e.message === 'SLUG_EXISTS' ? 'Slug already exists. Choose a different slug.' : (e && e.message) || 'Unknown error';
             alert('Save failed: ' + msg);
@@ -203,9 +197,7 @@
           const holder = document.getElementById('savedPosts');
           holder.textContent = 'Loading…';
           try {
-            const res = await fetch('/api/posts');
-            if (!res.ok) throw new Error('LOAD_FAILED');
-            const rows = await res.json();
+            const rows = getLocalPosts();
             if (!rows.length) { holder.textContent = 'No posts saved yet.'; return; }
             const list = document.createElement('div');
             list.style.display = 'grid';
